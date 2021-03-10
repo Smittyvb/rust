@@ -563,6 +563,15 @@ impl<'a: 'ast, 'ast> LateResolutionVisitor<'a, '_, 'ast> {
                         }
                     }
                 }
+            } else if err_code == &rustc_errors::error_code!(E0412) {
+                if let Some(correct) = Self::dectect_wrong_primitive(path) {
+                    err.span_suggestion(
+                        span,
+                        "you may have meant to use a literal instead",
+                        correct.to_string(),
+                        Applicability::MaybeIncorrect,
+                    );
+                }
             }
         }
 
@@ -1239,6 +1248,20 @@ impl<'a: 'ast, 'ast> LateResolutionVisitor<'a, '_, 'ast> {
             Some(found) if found != name => {
                 names.into_iter().find(|suggestion| suggestion.candidate == found)
             }
+            _ => None,
+        }
+    }
+
+    fn dectect_wrong_primitive(path: &[Segment]) -> Option<Symbol> {
+        let name = path[path.len() - 1].ident.name;
+        match name {
+            sym::byte => Some(sym::u8),
+            sym::short => Some(sym::i16),
+            sym::boolean => Some(sym::bool),
+            sym::int => Some(sym::i32),
+            sym::long => Some(sym::i64),
+            sym::float => Some(sym::f32),
+            sym::double => Some(sym::f64),
             _ => None,
         }
     }
