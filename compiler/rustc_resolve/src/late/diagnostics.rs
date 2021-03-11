@@ -567,7 +567,7 @@ impl<'a: 'ast, 'ast> LateResolutionVisitor<'a, '_, 'ast> {
                 if let Some(correct) = Self::dectect_wrong_primitive(path) {
                     err.span_suggestion(
                         span,
-                        "you may have meant to use a literal instead",
+                        "try using a Rust type instead",
                         correct.to_string(),
                         Applicability::MaybeIncorrect,
                     );
