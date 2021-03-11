@@ -1254,9 +1254,9 @@ impl<'a: 'ast, 'ast> LateResolutionVisitor<'a, '_, 'ast> {
 
     fn dectect_wrong_primitive(path: &[Segment]) -> Option<Symbol> {
         let name = path[path.len() - 1].ident.name;
+        // common java bytes
         match name {
-            // common java bytes
-            sym::byte => Some(sym::u8),
+            sym::byte => Some(sym::u8), // in Java bytes are signed, but in practice one almost always wants unsigned bytes
             sym::short => Some(sym::i16),
             sym::boolean => Some(sym::bool),
             sym::int => Some(sym::i32),
