@@ -1255,6 +1255,7 @@ impl<'a: 'ast, 'ast> LateResolutionVisitor<'a, '_, 'ast> {
     fn dectect_wrong_primitive(path: &[Segment]) -> Option<Symbol> {
         let name = path[path.len() - 1].ident.name;
         match name {
+            // common java bytes
             sym::byte => Some(sym::u8),
             sym::short => Some(sym::i16),
             sym::boolean => Some(sym::bool),
